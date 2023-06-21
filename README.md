@@ -1,5 +1,13 @@
 # Reconstruction-Of-Nuclear-Medicine-Imaging-Systems-Simulated-Acquisition-Scintigraphy-SPECT
 
+Steps to exaplain:
+
+1) Create the castor system file (geo)
+2) Create the histogram castor data from the root file
+3) Reconstruct the dataset, go over options
+4) How to read castor files in Matlab, ImageJ
+5) Provide example projections and reconstruction
+
 
 ## 3. Reconstruction in CASToR
 
