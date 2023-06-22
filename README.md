@@ -1,21 +1,34 @@
 # Reconstruction-Of-Nuclear-Medicine-Imaging-Systems-Simulated-Acquisition-Scintigraphy-SPECT
 
-Steps to exaplain:
+This tutorial is developed and maintained by Auer Benjamin from the Brigham and Women's Hospital and Harvard Medical School, Boston, MA, USA, and Pells Sophia from the University of Massachussets Chan Medical School, Worcester, MA, USA.
 
-We will explain in this tutorial how to reconstruct some of our GATE simulation [benchmarks](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT) with [CASTOR](https://castor-project.org/).
+**Contacts:** Auer, Benjamin Ph.D <bauer@bwh.harvard.edu> and Pells, Sophia Ph.D <Sophia.Pells@umassmed.edu>
 
-# 1. Convert the GATE ROOT Output into CASTOR Histogram File 
+Table of contents:
+```diff
+- 1. Convert the GATE ROOT Output into CASTOR Histogram File
+-- 1.1. Adapt the CASTOR Toolkit to be used with our simulated data
+-- 1.2. Create the CASTOR Scanner and Histogram SPECT Files
+- 2. Reconstruction in CASToR
+-- 2.1 Reconstruction without attenuation and scatter correction
+-- 2.2 Reconstruction with attenuation correction
+-- 2.3 Reconstruction with attenuation and scatter correction
+```
+-----
+We will explain in this tutorial how to reconstruct some of our GATE simulation [benchmarks](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT) with [CASToR](https://castor-project.org/).
 
-## 1.1. Adapt the CASTOR Toolkit to be used with our simulated data
-CASTOR provides a tool to create a CASTOR histogram datafile directly from a GATE macro and root file: `castor-GATErootToCastor`. However, by default this code utilizes the Singles TTree. In our [simulation](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT) we did set an energy range for the Photopeak TTree only, the Singles TTree was based on the full-spectrum. This approach is convenient, as it does not require to re-run the simulation if the energy window needs to be changed. The energy window can be applied while processing the ROOT file, for more information please see this [page](https://github.com/BenAuer2021/Tools-To-Analyze-Simulation-Output).
+# 1. Convert the GATE ROOT Output into CASToR Histogram File 
+
+## 1.1. Adapt the CASToR Toolkit to be used with our simulated data
+CASToR provides a tool to create a CASToR histogram datafile directly from a GATE macro and root file: `castor-GATErootToCastor`. However, by default this code utilizes the Singles TTree. In our [simulation](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT) we did set an energy range for the Photopeak TTree only, the Singles TTree was based on the full-spectrum. This approach is convenient, as it does not require to re-run the simulation if the energy window needs to be changed. The energy window can be applied while processing the ROOT file, for more information please see this [page](https://github.com/BenAuer2021/Tools-To-Analyze-Simulation-Output).
 
 We thus adapted the `castor-GATErootToCastor` code to use the `Photopeak TTree` in place of the `Singles TTree`. This was done by modifying line 1386 by
 ```ruby
 GEvents[iFic] = (TTree*)Tfile_root[iFic]->Get("Photopeak"); // Name of the Tree related to the photopeak
 ```
-When then modified the `CMakeLists.txt` and recompiled CASTOR to create another executable for the photopeak `castor-GATERootToCastor-Photopeak`.
+When then modified the `CMakeLists.txt` and recompiled CASToR to create another executable for the photopeak `castor-GATERootToCastor-Photopeak`.
 
-## 1.2. Create the CASTOR Scanner and Histogram SPECT Files
+## 1.2. Create the CASToR Scanner and Histogram SPECT Files
 
 To run the `castor-GATErootToCastor-Photopeak`, the following options need to be set,
 
@@ -28,7 +41,7 @@ where <br />
 `geo` will generate a CASToR geometry file from the provided GATE macro file(s). If the scanner_alias.geom file exist in the `castor/config/scanner/` directory, this option can be removed.  <br />
 `bins_x,bins_y` are the transaxial and axial number of bins for projections, separated by a comma.
 
-If the `-geo` option is specified, CASTOR will create a CASTOR scanner geometry file in the `castor/config/scanner/` from the GATE `.mac` file. Note that in order to determine the distance of the collimator to the center of rotation, CASToR expects the SPECTHead dimension to be specified in cm. However, this distance is overestimated as it is based on the SPECTHead shift and does not take into account the SPECTHead transaxial dimension. We strongly recomend to edit the line `scanner radius: 264.5,264.5` of the `scanner_alias.geom` file generating, by substracting half of the transaxial dimension of the SPECTHead. For example, for the following definition in GATE,
+If the `-geo` option is specified, CASToR will create a CASToR scanner geometry file in the `castor/config/scanner/` from the GATE `.mac` file. Note that in order to determine the distance of the collimator to the center of rotation, CASToR expects the SPECTHead dimension to be specified in cm. However, this distance is overestimated as it is based on the SPECTHead shift and does not take into account the SPECTHead transaxial dimension. We strongly recomend to edit the line `scanner radius: 264.5,264.5` of the `scanner_alias.geom` file generating, by substracting half of the transaxial dimension of the SPECTHead. For example, for the following definition in GATE,
 ```ruby
 /gate/world/daughters/name SPECThead
 /gate/world/daughters/insert box
@@ -39,7 +52,7 @@ If the `-geo` option is specified, CASTOR will create a CASTOR scanner geometry 
 /gate/SPECThead/setMaterial Air
 /gate/SPECThead/vis/setColor cyan
 ```
-In this example, we set in our simulation macro a translation of the `SPECThead` of 322.5 mm. The center of the SPECThead to center of rotation is 187.5 mm and the half dimension of the SPECTHead is 375 mm along the transaxial axis. Therefore, the distance of the front surface of the collimator to the center of rotation  is 135 mm. CASTOR will estimate the `scanner radius` to be 322.5 mm, however this distance should be equal to 135 mm (322.5-37.5/2).
+In this example, we set in our simulation macro a translation of the `SPECThead` of 322.5 mm. The center of the SPECThead to center of rotation is 187.5 mm and the half dimension of the SPECTHead is 375 mm along the transaxial axis. Therefore, the distance of the front surface of the collimator to the center of rotation  is 135 mm. CASToR will estimate the `scanner radius` to be 322.5 mm, however this distance should be equal to 135 mm (322.5-37.5/2).
 
 Comments after commands can also cause issues so make sure to remove all comments from the GATE macro (*.mac) file.
 
@@ -87,7 +100,7 @@ axial parameters: 0
 #field of view transaxial        : 613.7856 # optional (default is the half of the scanner radius)
 #field of view axial                : 613.7856 # optional (default is length of the scanner computed from the given parameters)
 ```
-As it can be seen the collimator specification (Resolution Recovery) are not modeled currently in CASTOR. The same CASTOR `.geom` can thus be used with the BrightView system equiped with multiple parrallel-hole collimators we created and available [here](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT/edit/main/README.md) to the extent that the radius of rotation (ROR) remain similar.
+As it can be seen the collimator specification (Resolution Recovery) are not modeled currently in CASToR. The same CASToR `.geom` can thus be used with the BrightView system equiped with multiple parrallel-hole collimators we created and available [here](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT/edit/main/README.md) to the extent that the radius of rotation (ROR) remain similar.
 
 For brain perfusion and DaT we use a ROR of 13.5 cm. However, for our quality control phantom simulation (Defrise, Jaszczak, Fillable Jaszczak, Derenzo) we used 22 cm ROR, the above line needs to be modified by `scanner radius: 220.0, 220.0`. For our glioblastoma imaging benchmark we used 15.5 cm ROR, the above line  needs to be modified by `scanner radius: 155.0, 155.0`. For our Bone imaging benchmark we used 41.25 cm ROR, the above line needs to be modified by `scanner radius: 412.5, 412.5`. For our Lu-177 DOTATATE imaging benchmark we used 26.25 cm ROR, the above line needs to be modified by `scanner radius: 262.5, 262.5`. We provide multiple `*.geom` files to be reconstructed for each of these scenario.
 
@@ -95,14 +108,14 @@ Another argument `-t` or `-ot` can be provided to use only the primary photons (
 
 Running ```castor-GATErootToCastor-Photopeak``` executable  will generate a CASToR datafile (.Cdf) and header (.Cdh). For example, 
 ```ruby
-home/benjamin/Documents/Software/CASTOR/castor_v3.1.1-build/castor-GATERootToCastor-Photopeak -i ../ROOT_Files/BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total.root -s SPECT_BRIGHTVIEW -o BRAIN_PERFUSION_CASTOR_230x170 -sp_bins 230,170 -m BRAIN_PERFUSION/Brightview_Main_LEHR_Tc99m_BrainPerfusion.mac  -vb 2
+home/benjamin/Documents/Software/CASToR/castor_v3.1.1-build/castor-GATERootToCastor-Photopeak -i ../ROOT_Files/BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total.root -s SPECT_BRIGHTVIEW -o BRAIN_PERFUSION_CASToR_230x170 -sp_bins 230,170 -m BRAIN_PERFUSION/Brightview_Main_LEHR_Tc99m_BrainPerfusion.mac  -vb 2
 ```
-will generate the following output and the Histogram data BRAIN_PERFUSION_CASTOR_230x170.Cdh and BRAIN_PERFUSION_CASTOR_230x170.Cdf as it can be seen below,
+will generate the following output and the Histogram data BRAIN_PERFUSION_CASToR_230x170.Cdh and BRAIN_PERFUSION_CASToR_230x170.Cdf as it can be seen below,
 <img width="811" alt="Screen Shot 2023-06-22 at 2 30 11 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/595c43e2-46d8-4797-a0a3-4916352779ea">
 
-The file size of the binary histogram file `BRAIN_PERFUSION_CASTOR_230x170.Cdf` is 72 MB. BRAIN_PERFUSION_CASTOR_230x170.Cdh is the header file and consist of the following information,
+The file size of the binary histogram file `BRAIN_PERFUSION_CASToR_230x170.Cdf` is 72 MB. BRAIN_PERFUSION_CASToR_230x170.Cdh is the header file and consist of the following information,
 ```ruby
-Data filename: BRAIN_PERFUSION_CASTOR_230x170_df.Cdf
+Data filename: BRAIN_PERFUSION_CASToR_230x170_df.Cdf
 Number of events: 4692000
 Data mode: histogram
 Data type: SPECT
@@ -119,9 +132,9 @@ Normalization correction flag: 0
 Scatter correction flag: 0
 Head rotation direction: CW
 ```
-# 3. Reconstruction in CASToR 
+# 2. Reconstruction in CASToR 
 
-Once the the Histogram CASTOR data are generated, we can reconstruct them via the `castor-recon` executable via the following command: <br />
+Once the the Histogram CASToR data are generated, we can reconstruct them via the `castor-recon` executable via the following command: <br />
 ```
 castor-recon
 [Main options:]
@@ -140,27 +153,32 @@ castor-recon
 ```
 The gaussian convolution `gaussian,7.,7.,5.::psf` sets a inter-recon stationary Gaussian kernel with a transaxial FWHM of 7 mm, axial FWHM of 7 mm and a kernel of 5 by 5 sigmas. `castor-recon` will write an image (*.img) and header file (*.hdr) for each iteration and subsets up to the total number specified (here `6:15`, 6 iterations and 15 subsets. If the option `-oit -1` is specified only the last iteration image will be saved.
 
-For example, if we have CASTOR Histogram file named `BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh` generated for a brain perfusion phantom, the following command will reconstruct the data with 6 iterations 15 subests in a 128x128x132 format with a voxel size of 2.34x2.34x3.125 mm<sup>2</sup>. THis allows to cover the axial (400 mm) and transaxial (270 mm) field of view of the BrightView system for brain imaging. A Gaussian inter-recon filter of transaxial FWHM of 7 mm, axial FWHM of 7 mm and a kernel of 5 by 5 sigmas is applied. The option `th 0` uses the maximum number of thread available on the computer.
+# 2.1 Reconstruction without attenuation and scatter correction
+For example, if we have CASToR Histogram file named `BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh` generated for a brain perfusion phantom, the following command will reconstruct the data with 6 iterations 15 subests in a 128x128x132 format with a voxel size of 2.34x2.34x3.125 mm<sup>2</sup>. THis allows to cover the axial (400 mm) and transaxial (270 mm) field of view of the BrightView system for brain imaging. A Gaussian inter-recon filter of transaxial FWHM of 7 mm, axial FWHM of 7 mm and a kernel of 5 by 5 sigmas is applied. The option `th 0` uses the maximum number of thread available on the computer.
 ```ruby
 castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh -fout OUTPUT -it 6:15 -dim 128,128,132 -vox 2.34,2.34,3.125 -conv gaussian,7.,7.,5.::psf -th 0 -vb 2 -opti MLEM -proj incrementalSiddon
 ```
 The following output will be generated for 1 MLEM iteration,
 <img width="732" alt="Screen Shot 2023-06-22 at 3 45 23 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/2bf3c827-108b-4d86-9f1c-72cb85aba870">
 
-With the `6:15` option, CASTOR will produce a set of reconstructed images for each iterations. These reconstructed images can be imported in ImageJ and Amide via the following parameters,
+With the `6:15` option, CASToR will produce a set of reconstructed images for each iterations. These reconstructed images can be imported in ImageJ and Amide via the following parameters,
 
 <img width="513" alt="Screen Shot 2023-06-22 at 3 31 16 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/84b5ad85-6d56-433d-a8d3-03b14c671e32">
 
-The `-atn` command can be added to perform attenuation correction during reconstruction. The attenuation map must be formated for CASTOR
+# 2.2 Reconstruction with attenuation correction
+The `-atn` command can be added to perform attenuation correction during reconstruction. The attenuation map must be formated for CASToR
 ```ruby
 castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh -fout OUTPUT_AC -it 6:15 -dim 128,128,132 -vox 2.34,2.34,3.125 -conv gaussian,7.,7.,5.::psf -th 0 -vb 2 -atn AllTissues_120x120x120_ForGate1_72x90x77_LinAttenCoeffsCm_140keV_float32_Livermore_rotate90.hdr -opti MLEM -proj incrementalSiddon
 ```
-It is important to make sure the CASTOR reconstructed image and attenuation map are properly registered and similarly oriented.
+It is important to make sure the CASToR reconstructed image and attenuation map are properly registered and similarly oriented.
 
 <img width="510" alt="Screen Shot 2023-06-22 at 3 34 13 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/58a811b1-f526-400e-bda6-ac570f35a522">
 
-To produce quantitative images, scatter correction (i.e. scatter rejection) can be added in addition to attenuation correction by using the CASTOR Histogram consisting solely of the primary photons, named `BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_tSC_df.Cdh` below. The command line will be the following,
+# 2.3 Reconstruction with attenuation and scatter correction
+To produce quantitative images, scatter correction (i.e. scatter rejection) can be added in addition to attenuation correction by using the CASToR Histogram consisting solely of the primary photons, named `BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_tSC_df.Cdh` below. The command line will be the following,
+```ruby
 castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_tSC_df.Cdh -fout BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_128,128,132_2.34,2.34,3.125_gaussian,7.,7.,5.::psf_AC_SC -it 6:15 -dim 128,128,132 -vox 2.34,2.34,3.125 -conv gaussian,7.,7.,5.::psf -th 0 -vb 2 -atn AllTissues_120x120x120_ForGate1_72x90x77_LinAttenCoeffsCm_140keV_float32_Livermore_rotate90.hdr -opti MLEM -proj incrementalSiddon
-
+```
+A comparison of the different degree of correction is provided below,
 <img width="457" alt="Screen Shot 2023-06-22 at 3 41 25 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/e3d8e106-ed9c-470e-8674-bbcae16e27c1">
 
