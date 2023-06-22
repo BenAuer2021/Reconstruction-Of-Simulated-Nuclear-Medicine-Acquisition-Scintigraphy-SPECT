@@ -6,7 +6,7 @@ We will explain in this tutorial how to reconstruct some of our GATE simulation 
 
 # 1. Convert the GATE ROOT Output into CASTOR Histogram File 
 
-## Adapt the CASTOR Toolkit to be used with our simulated data
+## 1.1. Adapt the CASTOR Toolkit to be used with our simulated data
 CASTOR provides a tool to create a CASTOR histogram datafile directly from a GATE macro and root file: `castor-GATErootToCastor`. However, by default this code utilizes the Singles TTree. In our [simulation]{https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT} we did set an energy range for the Photopeak TTree only, the Singles TTree was based on the full-spectrum. This approach is convenient, as it does not require to re-run the simulation if the energy window needs to be changed. The energy window can be applied while processing the ROOT file, for more information please see this [page]{https://github.com/BenAuer2021/Tools-To-Analyze-Simulation-Output}.
 
 We thus adapted the `castor-GATErootToCastor` code to use the 'Photopeak TTree' in place of the 'Singles TTree'. This was done by modifying line 1386 by
@@ -15,7 +15,7 @@ GEvents[iFic] = (TTree*)Tfile_root[iFic]->Get("Photopeak"); // Name of the Tree 
 ```
 When then modified the 'CMakeLists.txt' and recompiled CASTOR to create another executable for the photopeak 'castor-GATERootToCastor-Photopeak'.
 
-## 2. Create the CASTOR Scanner and Histogram SPECT Files
+## 1.2. Create the CASTOR Scanner and Histogram SPECT Files
 
 To run the 'castor-GATErootToCastor-Photopeak', the following options need to be set,
 
@@ -119,7 +119,7 @@ Normalization correction flag: 0
 Scatter correction flag: 0
 Head rotation direction: CW
 ```
-## 3. Reconstruction in CASToR 
+# 3. Reconstruction in CASToR 
 
 Once the the Histogram CASTOR data are generated, we can reconstruct them via the `castor-recon` executable via the following command: <br />
 ```
@@ -140,11 +140,14 @@ castor-recon
 ```
 The gaussian convolution `gaussian,7.,7.,5.::psf` sets a inter-recon stationary Gaussian kernel with a transaxial FWHM of 7 mm, axial FWHM of 7 mm and a kernel of 5 by 5 sigmas. `castor-recon` will write an image (*.img) and header file (*.hdr) for each iteration and subsets up to the total number specified (here '6:15', 6 iterations and 15 subsets. If the option '-oit -1' is specified only the last iteration image will be saved.
 
-For example, if we have CASTOR Histogram file named 'BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh' generated for a brain perfusion phantom, the following command will reconstruct the data with 6 iterations 15 subests in a 128x128x132 format with a voxel size of 2.34x2.34x3.125 mm<sup>2</sup>. THis allows to cover the axial (400 mm) and transaxial (270 mm) field of view of the BrightView system for brain imaging. A Gaussian inter-recon filter of transaxial FWHM of 7 mm, axial FWHM of 7 mm and a kernel of 5 by 5 sigmas is applied. The option 'th 0' uses the maximum number of thread available on the computer.
+For example, if we have CASTOR Histogram file named `BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh` generated for a brain perfusion phantom, the following command will reconstruct the data with 6 iterations 15 subests in a 128x128x132 format with a voxel size of 2.34x2.34x3.125 mm<sup>2</sup>. THis allows to cover the axial (400 mm) and transaxial (270 mm) field of view of the BrightView system for brain imaging. A Gaussian inter-recon filter of transaxial FWHM of 7 mm, axial FWHM of 7 mm and a kernel of 5 by 5 sigmas is applied. The option 'th 0' uses the maximum number of thread available on the computer.
 ```ruby
 castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh -fout OUTPUT -it 6:15 -dim 128,128,132 -vox 2.34,2.34,3.125 -conv gaussian,7.,7.,5.::psf -th 0 -vb 2 -opti MLEM -proj incrementalSiddon
 ```
-CASTOR will produce a set of reconstructed images for each iterations. These reconstructed images can be imported in ImageJ and Amide via the following parameters,
+The following output will be generated for 1 MLEM iteration,
+<img width="732" alt="Screen Shot 2023-06-22 at 3 45 23 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/2bf3c827-108b-4d86-9f1c-72cb85aba870">
+
+With the '6:15' option, CASTOR will produce a set of reconstructed images for each iterations. These reconstructed images can be imported in ImageJ and Amide via the following parameters,
 
 <img width="513" alt="Screen Shot 2023-06-22 at 3 31 16 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/84b5ad85-6d56-433d-a8d3-03b14c671e32">
 
