@@ -2,12 +2,12 @@
 
 Steps to exaplain:
 
-We will explain in this tutorial how to reconstruct some of our GATE simulation [benchmarks]{https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT} with [CASTOR]{https://castor-project.org/}.
+We will explain in this tutorial how to reconstruct some of our GATE simulation [benchmarks](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT) with [CASTOR](https://castor-project.org/).
 
 # 1. Convert the GATE ROOT Output into CASTOR Histogram File 
 
 ## 1.1. Adapt the CASTOR Toolkit to be used with our simulated data
-CASTOR provides a tool to create a CASTOR histogram datafile directly from a GATE macro and root file: `castor-GATErootToCastor`. However, by default this code utilizes the Singles TTree. In our [simulation]{https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT} we did set an energy range for the Photopeak TTree only, the Singles TTree was based on the full-spectrum. This approach is convenient, as it does not require to re-run the simulation if the energy window needs to be changed. The energy window can be applied while processing the ROOT file, for more information please see this [page]{https://github.com/BenAuer2021/Tools-To-Analyze-Simulation-Output}.
+CASTOR provides a tool to create a CASTOR histogram datafile directly from a GATE macro and root file: `castor-GATErootToCastor`. However, by default this code utilizes the Singles TTree. In our [simulation](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT) we did set an energy range for the Photopeak TTree only, the Singles TTree was based on the full-spectrum. This approach is convenient, as it does not require to re-run the simulation if the energy window needs to be changed. The energy window can be applied while processing the ROOT file, for more information please see this [page](https://github.com/BenAuer2021/Tools-To-Analyze-Simulation-Output).
 
 We thus adapted the `castor-GATErootToCastor` code to use the 'Photopeak TTree' in place of the 'Singles TTree'. This was done by modifying line 1386 by
 ```ruby
@@ -43,7 +43,7 @@ In this example, we set in our simulation macro a translation of the `SPECThead`
 
 Comments after commands can also cause issues so make sure to remove all comments from the GATE macro (*.mac) file.
 
-The `scanner_alias.geom` file defines the components of the system. Below is an example for the BrightView system used for all our simulation described [here]{https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT/edit/main/README.md} 
+The `scanner_alias.geom` file defines the components of the system. Below is an example for the BrightView system used for all our simulation described [here](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT/edit/main/README.md) 
 ```ruby
 modality: SPECT_CONVERGENT
 scanner name: SPECT_BRIGHTVIEW
@@ -87,7 +87,7 @@ axial parameters: 0
 #field of view transaxial        : 613.7856 # optional (default is the half of the scanner radius)
 #field of view axial                : 613.7856 # optional (default is length of the scanner computed from the given parameters)
 ```
-As it can be seen the collimator specification (Resolution Recovery) are not modeled currently in CASTOR. The same CASTOR '.geom' can thus be used with the BrightView system equiped with multiple parrallel-hole collimators we created and available [here]{https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT/edit/main/README.md} to the extent that the radius of rotation (ROR) remain similar.
+As it can be seen the collimator specification (Resolution Recovery) are not modeled currently in CASTOR. The same CASTOR '.geom' can thus be used with the BrightView system equiped with multiple parrallel-hole collimators we created and available [here](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT/edit/main/README.md) to the extent that the radius of rotation (ROR) remain similar.
 
 For brain perfusion and DaT we use a ROR of 13.5 cm. However, for our quality control phantom simulation (Defrise, Jaszczak, Fillable Jaszczak, Derenzo) we used 22 cm ROR, the above line needs to be modified by 'scanner radius: 220.0, 220.0'. For our glioblastoma imaging benchmark we used 15.5 cm ROR, the above line  needs to be modified by 'scanner radius: 155.0, 155.0'. For our Bone imaging benchmark we used 41.25 cm ROR, the above line needs to be modified by 'scanner radius: 412.5, 412.5'. For our Lu-177 DOTATATE imaging benchmark we used 26.25 cm ROR, the above line needs to be modified by 'scanner radius: 262.5, 262.5'. We provide multiple '*.geom' files to be reconstructed for each of these scenario.
 
