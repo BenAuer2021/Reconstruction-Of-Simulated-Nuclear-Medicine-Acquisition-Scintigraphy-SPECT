@@ -188,6 +188,7 @@ We provide multiple example of reconstruction in CASToR of GATE simulated data a
 
 ## 2.5.1 Bone Imaging
 In this example, we simulated in GATE a whole-body Tc-99m MDP Bone scan with 3 bed positions (400 mm axial length each) with the BrightView system equipped with LEHR collimator. Each of the 3 bed position acquisition consisted of 64 views over 360 degree and the radius of rotation was 41.25 cm. The first bed position ( `pos1` centered on the leg region) scan recorded 6,705,068 Cts, the second bed position ( `pos0` centered on the torso and neck region) included 11,881,614 Cts, and the third bed position (`pos 2` centered on the abdominal region) consisted of 13,030,131 Cts. Attenuation in the phantom was not modeled in the simulation in order to improve computation efficiency. Simulated projections were reconstructed in 360x360x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 7 mm by 7 mm and a kernel size of 5 by 5 and 2 iterations/15 subsets. We provide the Histogram CASToR files (*.Cdf, *.Cdh) and the scanner *.geom file (**Bone.zip**).
+
 <img width="563" alt="Screen Shot 2023-06-22 at 8 08 36 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/d863f3d9-a9b7-4c06-af51-cc4c7dab89f3">
 
 ## 2.5.2 Fillable Jaszczak Phantom Imaging
