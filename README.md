@@ -213,6 +213,6 @@ In this example, we simulated in GATE with the BrightView system equipped with H
 ## 2.5.6 Dotatate Imaging
 In this example, we simulated in GATE with the BrightView system equipped with MEGP collimator an Lu-177 Dotatate acquisition with the patient data phantom described [here](https://github.com/BenAuer2021/Phantoms-For-Nuclear-Medicine-Imaging-Simulation). The acquisition consisted of 64 views over 360 degree and radius of rotation was 26.25 cm. A total of 1,617,529 Cts was recorded. Attenuation in the phantom was modeled in the simulation. The simulated projections were reconstructed in 280x280x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 7 mm by 7 mm and a kernel size of 5 by 5. We provide the Histogram CASToR files with and without scatter (*.Cdf, *.Cdh), the attenuation map (*.hdr, *.img), and the scanner *.geom file (**DOTATATE.zip**).
 
-<img width="406" alt="Screen Shot 2023-06-22 at 8 14 43 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/afb43815-1f83-41aa-88e9-bfe5de3dd89d">
+<img width="600" alt="Screen Shot 2023-06-22 at 8 14 43 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/afb43815-1f83-41aa-88e9-bfe5de3dd89d">
 
 
