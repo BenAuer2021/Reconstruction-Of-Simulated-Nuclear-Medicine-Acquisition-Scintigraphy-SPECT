@@ -117,8 +117,9 @@ Running ```castor-GATErootToCastor-Photopeak``` executable  will generate a CAST
 ```ruby
 home/benjamin/Documents/Software/CASToR/castor_v3.1.1-build/castor-GATERootToCastor-Photopeak -i ../ROOT_Files/BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total.root -s SPECT_BRIGHTVIEW -o BRAIN_PERFUSION_CASToR_230x170 -sp_bins 230,170 -m BRAIN_PERFUSION/Brightview_Main_LEHR_Tc99m_BrainPerfusion.mac  -vb 2
 ```
-will generate the following output and the Histogram data BRAIN_PERFUSION_CASToR_230x170.Cdh and BRAIN_PERFUSION_CASToR_230x170.Cdf as it can be seen below,
-<img width="811" alt="Screen Shot 2023-06-22 at 2 30 11 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/595c43e2-46d8-4797-a0a3-4916352779ea">
+will generate the following output and the Histogram data BRAIN_PERFUSION_CASToR_230x170.Cdh and BRAIN_PERFUSION_CASToR_230x170.Cdf.
+
+https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/7bcba518-46fc-42ff-91e4-3a83e98ee27b
 
 The file size of the binary histogram file `BRAIN_PERFUSION_CASToR_230x170.Cdf` is 72 MB. BRAIN_PERFUSION_CASToR_230x170.Cdh is the header file and consist of the following information,
 ```ruby
