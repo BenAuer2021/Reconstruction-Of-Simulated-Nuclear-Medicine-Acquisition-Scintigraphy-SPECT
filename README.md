@@ -166,12 +166,14 @@ For example, if we have CASToR Histogram file named `BV_LEHR_ADAC_HofBrain_14.75
 ```ruby
 castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_df.Cdh -fout OUTPUT -it 6:15 -dim 128,128,132 -vox 2.34,2.34,3.125 -conv gaussian,7.,7.,5.::psf -th 0 -vb 2 -opti MLEM -proj incrementalSiddon
 ```
-The following output will be generated for 1 MLEM iteration,
-<img width="732" alt="Screen Shot 2023-06-22 at 3 45 23 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/2bf3c827-108b-4d86-9f1c-72cb85aba870">
+The following output will be generated for 2 OSEM iterations with 5 subsets,
+
+https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/333ed05d-3916-414a-85db-441ccbb519a0
 
 With the `6:15` option, CASToR will produce a set of reconstructed images for each iterations. These reconstructed images can be imported in ImageJ and Amide via the following parameters,
 
-<img width="513" alt="Screen Shot 2023-06-22 at 3 31 16 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/84b5ad85-6d56-433d-a8d3-03b14c671e32">
+<img width="680" alt="Screen Shot 2023-08-17 at 8 56 48 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/64c263ce-095a-4f58-a71e-882bccf9a42d">
+
 
 ## 2.2 Reconstruction with attenuation correction
 The `-atn` command can be added to perform attenuation correction during reconstruction. The attenuation map must be formated for CASToR
@@ -189,7 +191,8 @@ castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mon
 ```
 A comparison of the different degree of correction is provided below,
 
-<img width="457" alt="Screen Shot 2023-06-22 at 3 41 25 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/e3d8e106-ed9c-470e-8674-bbcae16e27c1">
+
+<img width="644" alt="Screen Shot 2023-08-17 at 9 09 41 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/31c1c510-efb4-4161-9f3a-5841e7e057d7">
 
 # 3. Benchmarks
 We provide multiple example of reconstruction in CASToR of GATE simulated data available [here](https://github.com/BenAuer2021/Simulation-Of-Nuclear-Medicine-Imaging-Systems-Scintigraphy-SPECT).
@@ -197,30 +200,34 @@ We provide multiple example of reconstruction in CASToR of GATE simulated data a
 ## 3.1 Bone Imaging
 In this example, we simulated in GATE a whole-body Tc-99m MDP Bone scan with 3 bed positions (400 mm axial length each) with the BrightView system equipped with LEHR collimator. Each of the 3 bed position acquisition consisted of 64 views over 360 degree and the radius of rotation was 41.25 cm. The first bed position ( `pos1` centered on the leg region) scan recorded 6,705,068 Cts, the second bed position ( `pos0` centered on the torso and neck region) included 11,881,614 Cts, and the third bed position (`pos 2` centered on the abdominal region) consisted of 13,030,131 Cts. Attenuation in the phantom was not modeled in the simulation in order to improve computation efficiency. Simulated projections were reconstructed in 360x360x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 7 mm by 7 mm and a kernel size of 5 by 5 and 2 iterations/15 subsets. We provide the Histogram CASToR files (*.Cdf, *.Cdh) and the scanner *.geom file (**Bone.zip**).
 
-<img width="563" alt="Screen Shot 2023-06-22 at 8 08 36 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/d863f3d9-a9b7-4c06-af51-cc4c7dab89f3">
+<img width="665" alt="Screen Shot 2023-08-17 at 9 11 27 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/5125f2fb-d199-49e4-b730-cef154f1ca28">
 
 ## 3.2 Fillable Jaszczak Phantom Imaging
 In this example, we simulated in GATE with the BrightView system equipped with LEHR collimator an Tc-99m acquisition with the fillable Jaszczak phantom with and without background activity described [here](https://github.com/BenAuer2021/Phantoms-For-Nuclear-Medicine-Imaging-Simulation). The acquisition consisted of 120 views over 360 degree and the radius of rotation was 22 cm. A total of 46,632.127 Cts and 15,443,078 Cts were recorded with and without background activity, respectively. Attenuation in the phantom was not modeled in the simulation in order to improve computation efficiency. Simulated projections were reconstructed in 128x128x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 5 mm by 5 mm and a kernel size of 5 by 5 and 2 iterations/15 subsets. We provide the Histogram CASToR files (*.Cdf, *.Cdh) and the scanner *.geom file (**Fillable_ Jaszczak_wBackgroundActivity.zip** && **Fillable_ Jaszczak.zip**).
 
-<img width="611" alt="Screen Shot 2023-06-22 at 7 55 55 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/f1053138-e418-4ebe-ba31-5655933e63de">
+<img width="588" alt="Screen Shot 2023-08-17 at 9 13 36 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/4d07781a-4650-485d-ab56-ea29996f78c7">
 
 ## 3.3 Brain Perfusion Imaging
 In this example, we simulated in GATE with the BrightView system equipped with LEHR-VXHR collimator an Tc-99m HMPAO brain perfusion acquisition with the brain perfusion phantom described [here](https://github.com/BenAuer2021/Phantoms-For-Nuclear-Medicine-Imaging-Simulation). The acquisition consisted of 120 views over 360 degree and radius of rotation was 13.5 cm. A total of 5,250,896 Cts was recorded. Attenuation in the phantom was modeled in the simulation. The simulated projections were reconstructed in 128x128x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 5 mm by 5 mm and a kernel size of 5 by 5 and 2 iterations/15 subsets. We provide the Histogram CASToR files with and without scatter (*.Cdf, *.Cdh), the attenuation map (*.hdr, *.img) and the scanner *.geom file (**Brain_Perfusion.zip**).
-<img width="476" alt="Screen Shot 2023-06-22 at 8 00 56 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/4b5c40ec-e4e8-44ae-969f-2cb7dad722ff">
+
+<img width="644" alt="Screen Shot 2023-08-17 at 9 14 08 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/e14f69af-8485-490e-b842-1ecd61bec36c">
+
+<img width="749" alt="image" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/70d803bf-9798-49f2-aa1c-f03e82edc723">
 
 ## 3.4 Brain DaT Imaging
 In this example, we simulated in GATE with the BrightView system equipped with LEHR and MEGP collimators an I-123 Ioflupane brain DaT acquisition with the DaT phantom described [here](https://github.com/BenAuer2021/Phantoms-For-Nuclear-Medicine-Imaging-Simulation). The acquisition consisted of 120 views over 360 degree and radius of rotation was 13.5 cm. A total of 6,640,150 Cts and 1,601,801 Cts were recorded for acquisition with MEGP and LEHR collimators. Attenuation in the phantom was not modeled in the simulation in order to improve computation efficiency. The simulated projections were reconstructed in 128x128x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 7 mm by 7 mm and a kernel size of 5 by 5 and 2 iterations/15 subsets. We provide the Histogram CASToR files (*.Cdf, *.Cdh) and the scanner *.geom file (**DaT.zip**).
 
-<img width="383" alt="Screen Shot 2023-06-22 at 7 59 59 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/d14367b7-e59a-46ee-b90e-e5e1e3a2af8c">
+<img width="639" alt="Screen Shot 2023-08-17 at 9 15 27 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/b3075aa0-0ea3-40b5-b77e-07a91ab8cc42">
 
 ## 3.5 Brain Glioblastoma Imaging
 In this example, we simulated in GATE with the BrightView system equipped with HEGP collimator an I-131 brain glioblastoma acquisition with the glioblastoma phantom described [here](https://github.com/BenAuer2021/Phantoms-For-Nuclear-Medicine-Imaging-Simulation). The acquisition consisted of 120 views over 360 degree and radius of rotation was 15.5 cm. A total of 11,122,811 Cts was recorded. Attenuation in the phantom was not modeled in the simulation in order to improve computation efficiency. The simulated projections were reconstructed in 128x128x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 7 mm by 7 mm and a kernel size of 5 by 5 and 1-4 iterations with 15 subsets. We provide the Histogram CASToR files (*.Cdf, *.Cdh) and the scanner *.geom file (**Glioblastoma.zip**).
 
-<img width="608" alt="Screen Shot 2023-06-22 at 8 03 08 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/194673de-accf-449a-9ebe-c0fa9aabe8e3">
+<img width="576" alt="Screen Shot 2023-08-17 at 9 16 52 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/260a456b-a6b5-40f5-90ff-97cb550ce218">
 
 ## 3.6 Dotatate Imaging
 In this example, we simulated in GATE with the BrightView system equipped with MEGP collimator an Lu-177 Dotatate acquisition with the patient data phantom described [here](https://github.com/BenAuer2021/Phantoms-For-Nuclear-Medicine-Imaging-Simulation). The acquisition consisted of 64 views over 360 degree and radius of rotation was 26.25 cm. A total of 1,617,529 Cts was recorded. Attenuation in the phantom was modeled in the simulation. The simulated projections were reconstructed in 280x280x132 voxels of 2.34x2.34x3.125 mm<sup>3</sup> with a Gaussian intra-recon filter of 7 mm by 7 mm and a kernel size of 5 by 5. We provide the Histogram CASToR files with and without scatter (*.Cdf, *.Cdh), the attenuation map (*.hdr, *.img), and the scanner *.geom file (**DOTATATE.zip**).
 
-<img width="600" alt="Screen Shot 2023-06-22 at 8 14 43 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/afb43815-1f83-41aa-88e9-bfe5de3dd89d">
+<img width="434" alt="Screen Shot 2023-08-17 at 9 17 21 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/a05203a9-0ab4-4153-82de-caaa7e540234">
+
 
 
