@@ -182,15 +182,15 @@ castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mon
 ```
 It is important to make sure the CASToR reconstructed image and attenuation map are properly registered and similarly oriented.
 
-<img width="510" alt="Screen Shot 2023-06-22 at 3 34 13 PM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/58a811b1-f526-400e-bda6-ac570f35a522">
-
 ## 2.3 Reconstruction with attenuation and scatter correction
 To produce quantitative images, scatter correction (i.e. scatter rejection) can be added in addition to attenuation correction by using the CASToR Histogram consisting solely of the primary photons, named `BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_tSC_df.Cdh` below. The command line will be the following,
 ```ruby
 castor-recon -df BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_tSC_df.Cdh -fout BV_LEHR_ADAC_HofBrain_14.75BqScale_fluo0Nested_1sRuns180deg_mono140keV-total_SPECT_BRIGHTVIEW_230x170_128,128,132_2.34,2.34,3.125_gaussian,7.,7.,5.::psf_AC_SC -it 6:15 -dim 128,128,132 -vox 2.34,2.34,3.125 -conv gaussian,7.,7.,5.::psf -th 0 -vb 2 -atn AllTissues_120x120x120_ForGate1_72x90x77_LinAttenCoeffsCm_140keV_float32_Livermore_rotate90.hdr -opti MLEM -proj incrementalSiddon
 ```
-A comparison of the different degree of correction is provided below,
 
+https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/a6776f5e-92f5-426b-bdd1-4efd7b02812e
+
+A comparison of the different degree of correction is provided below,
 
 <img width="644" alt="Screen Shot 2023-08-17 at 9 09 41 AM" src="https://github.com/BenAuer2021/Reconstruction-Of-Simulated-Nuclear-Medicine-Acquisition-Scintigraphy-SPECT/assets/84809217/31c1c510-efb4-4161-9f3a-5841e7e057d7">
 
